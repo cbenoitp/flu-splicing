@@ -1,0 +1,526 @@
+# if no dataset is chosen, show nothing
+if (isDatasetDefined()){
+    return()
+    # if no dataset2 is chosen, show the complete page for one dataset
+} else if (isDataset2Defined()){
+    return(
+        # Sidebar with the different filters
+        sidebarLayout(position = "right",
+                      sidebarPanel(h2("Filters"),
+                                   width = 3,
+                                   helpText("Choose the threshold for each filter."),
+                                   
+                                   sliderInput("deltaPSI",
+                                               label = "Threshold absolute value of deltaPSI:",
+                                               min = 0,
+                                               max = 100,
+                                               value = 10),
+                                   
+                                   numericInput("padj",
+                                                label = "Threshold adjusted p-value:",
+                                                value = 0.05,
+                                                step = 0.01),
+                                   helpText("Adjusted p-value should be a numeric between 0 and 1."),
+                                   
+                                   checkboxGroupInput("eventType",
+                                                      label = "Choose the type of splicing events:",
+                                                      choices = listTypeEvents(datasetInput()),
+                                                      selected = listTypeEvents(datasetInput())),
+                                   actionButton("selectAllType","Deselect All"),
+                                   
+                                   br(),
+                                   
+                                   h4("Other filters:"),
+                                   
+                                   checkboxInput("splicingFactor", "Select only the genes from the splicing factor list.", FALSE),
+                                   
+                                   checkboxInput("filterC1PSI", "Apply/Remove filter on mean PSI of first condition (C1)", FALSE),
+                                   conditionalPanel("input.filterC1PSI",
+                                                    sliderInput("C1PSI",
+                                                                label = "Threshold minimum mean PSI value of first condition (C1):",
+                                                                min = 0,
+                                                                max = 100,
+                                                                value = 10)
+                                   ),
+                                   checkboxInput("filterC2PSI", "Apply/Remove filter on mean PSI of second condition (C2)", FALSE),
+                                   conditionalPanel("input.filterC2PSI",
+                                                    sliderInput("C2PSI",
+                                                                label = "Threshold minimum mean PSI value of second condition (C2):",
+                                                                min = 0,
+                                                                max = 100,
+                                                                value = 10)
+                                   ),
+                                   
+                                   tags$b("Filters on expression data"),
+                                   
+                                   checkboxInput("filterbaseMean", "Apply/Remove filter on baseMean value", FALSE),
+                                   conditionalPanel("input.filterbaseMean",
+                                                    sliderInput("baseMean",
+                                                                label = "Threshold minimum baseMean value:",
+                                                                min = 0,
+                                                                max = 500,
+                                                                value = 10)
+                                   ),
+                                   checkboxInput("filterC1fpkm", "Apply/Remove filter on FPKM of first condition (C1)", FALSE),
+                                   conditionalPanel("input.filterC1fpkm",
+                                                    sliderInput("C1fpkm",
+                                                                label = "Threshold minimum FPKM value of first condition (C1):",
+                                                                min = 0,
+                                                                max = 100,
+                                                                value = 1)
+                                   ),
+                                   checkboxInput("filterC2fpkm", "Apply/Remove filter on FPKM of second condition (C2)", FALSE),
+                                   conditionalPanel("input.filterC2fpkm",
+                                                    sliderInput("C2fpkm",
+                                                                label = "Threshold minimum FPKM value of second condition (C2):",
+                                                                min = 0,
+                                                                max = 100,
+                                                                value = 1)
+                                   ),
+                                   checkboxInput("filterORfpkm", "Apply/Remove filter on FPKM of first (C1) or second (C2) condition", FALSE),
+                                   conditionalPanel("input.filterORfpkm",
+                                                    sliderInput("ORfpkm",
+                                                                label = "Threshold minimum FPKM value of first (C1) or second (C2) condition:",
+                                                                min = 0,
+                                                                max = 100,
+                                                                value = 1)
+                                   ),
+                                   checkboxInput("filterC1LocalExpr", "Apply/Remove filter on event expression of first condition (C1)", FALSE),
+                                   conditionalPanel("input.filterC1LocalExpr",
+                                                    sliderInput("C1LocalExpr",
+                                                                label = "Threshold minimum event expression value of first condition (C1):",
+                                                                min = 0,
+                                                                max = 2,
+                                                                value = 0.5,
+                                                                step = 0.1)
+                                   ),
+                                   checkboxInput("filterC2LocalExpr", "Apply/Remove filter on event expression of second condition (C2)", FALSE),
+                                   conditionalPanel("input.filterC2LocalExpr",
+                                                    sliderInput("C2LocalExpr",
+                                                                label = "Threshold minimum event expression value of second condition (C2):",
+                                                                min = 0,
+                                                                max = 2,
+                                                                value = 0.5,
+                                                                step = 0.1)
+                                   ),
+                                   checkboxInput("filterORLocalExpr", "Apply/Remove filter on event expression of first (C1) or second (C2) condition", FALSE),
+                                   conditionalPanel("input.filterORLocalExpr",
+                                                    sliderInput("ORLocalExpr",
+                                                                label = "Threshold minimum event expression value of first (C1) or second (C2) condition:",
+                                                                min = 0,
+                                                                max = 2,
+                                                                value = 0.5,
+                                                                step = 0.1)
+                                   ),
+                                   checkboxInput("filterl2fc", "Apply/Remove filter on log2 fold change value", FALSE),
+                                   conditionalPanel("input.filterl2fc",
+                                                    sliderInput("l2fc",
+                                                                label = "Range absolute log2 fold change value:",
+                                                                min = 0,
+                                                                max = ceiling(max(abs(datasetInput()[,'log2FoldChange']), na.rm=TRUE)),
+                                                                value = c(1,3),
+                                                                step = 0.1)
+                                   ),
+                                   checkboxInput("filterpadjDESeq", "Apply/Remove filter on DESeq2 adjusted p-value", FALSE),
+                                   conditionalPanel("input.filterpadjDESeq",
+                                                    numericInput("padjDESeq",
+                                                                 label = "Threshold minimum DESeq2 adjusted p-value:",
+                                                                 value = 0.05,
+                                                                 step = 0.01),
+                                                    helpText("Adjusted p-value should be a numeric between 0 and 1.")
+                                   ),
+                                   
+                                   tags$b("Filters on VirHostNet data"),
+                                   
+                                   checkboxInput("filterVDegree", "Apply/Remove filter on number of viral partner", FALSE),
+                                   conditionalPanel("input.filterVDegree",
+                                                    sliderInput("vDegree",
+                                                                label = "Minimum number of viral partner:",
+                                                                min = 0,
+                                                                max = 70,
+                                                                value = 1,
+                                                                step = 1)
+                                   ),
+                                   checkboxInput("filterHDegree", "Apply/Remove filter on number of human partner", FALSE),
+                                   conditionalPanel("input.filterHDegree",
+                                                    sliderInput("hDegree",
+                                                                label = "Minimum number of human partner:",
+                                                                min = 0,
+                                                                max = 100,
+                                                                value = 1,
+                                                                step = 1)
+                                   )
+                      ),
+                      
+                      # Show a plot of the generated distribution
+                      mainPanel(width = 9,
+                                tabsetPanel(id = "tabAS",
+                                            tabPanel('Dataset',
+                                                     withSpinner(
+                                                     tablePanelUI('showDataset',
+                                                                  choices = reactive({getColumnName(datasetInput())}),
+                                                                  selected = c("Gene_Name", "Strand", "Event_type", 
+                                                                               "Variable_part_length", "adjusted_pvalue", 
+                                                                               "dPSI")
+                                                     ))
+                                            ),
+                                            
+                                            tabPanel('Plot',
+                                                     withSpinner(
+                                                     plotPanelUI('plotDataset',
+                                                                 xchoices = c("Event_type", "Variable_part_length", 
+                                                                              "adjusted_pvalue", "dPSI",
+                                                                              "baseMean", "log2FoldChange",
+                                                                              "C1_local_expression", "C2_local_expression",
+                                                                              "C1_fpkm", "C2_fpkm", "C1_PSI_mean", "C2_PSI_mean"),
+                                                                 xselected = "Event_type",
+                                                                 ychoices = c("Event_type", "Variable_part_length", 
+                                                                              "adjusted_pvalue", "dPSI",
+                                                                              "baseMean", "log2FoldChange",
+                                                                              "C1_local_expression", "C2_local_expression",
+                                                                              "C1_fpkm", "C2_fpkm", "C1_PSI_mean", "C2_PSI_mean"),
+                                                                 yselected = "dPSI",
+                                                                 colorChoices = c("Variable_part_length", "adjusted_pvalue", "dPSI", 
+                                                                                  "baseMean", "log2FoldChange", "C1_local_expression", 
+                                                                                  "C2_local_expression", "C1_fpkm", "C2_fpkm", 
+                                                                                  "C1_PSI_mean", "C2_PSI_mean"),
+                                                                 colorSelectedVar = "Variable_part_length",
+                                                                 colorSelectedCond = "=",
+                                                                 colorSelectedVal = 0
+                                                     ))
+                                            )
+                                )
+                      )
+        )
+    )
+    # else show the complete page for two dataset
+} else{
+    return(
+        # Sidebar with the different filters
+        sidebarLayout(position = "right",
+                      sidebarPanel(h2("Filters"),
+                                   width = 3,
+                                   helpText("Choose the threshold for each filter."),
+                                   
+                                   sliderInput("deltaPSI1",
+                                               label = "Threshold absolute value of deltaPSI for the first dataset:",
+                                               min = 0,
+                                               max = 100,
+                                               value = 10),
+                                   radioButtons("signDeltaPSI1",
+                                                label = "Sign of the deltaPSI for the first dataset:",
+                                                choices = c("+", "-", "both"),
+                                                selected = "both",
+                                                inline = TRUE),
+                                   
+                                   sliderInput("deltaPSI2",
+                                               label = "Threshold absolute value of deltaPSI for the second dataset:",
+                                               min = 0,
+                                               max = 100,
+                                               value = 10),
+                                   radioButtons("signDeltaPSI2",
+                                                label = "Sign of the deltaPSI for the second dataset:",
+                                                choices = c("+", "-", "both"),
+                                                selected = "both",
+                                                inline = TRUE),
+                                   
+                                   checkboxInput("filterDiffdeltaPSI", "Apply/Remove filter on difference of deltaPSI between the 2 datasets", FALSE),
+                                   conditionalPanel("input.filterDiffdeltaPSI",
+                                                    sliderInput("diffdeltaPSI",
+                                                                label = "Maximum difference between the 2 deltaPSI:",
+                                                                min = 0,
+                                                                max = 100,
+                                                                value = 10)
+                                   ),
+                                   checkboxInput("signDeltaPSI", "Select only events with same sign of deltaPSI", FALSE),
+                                   
+                                   numericInput("padj1",
+                                                label = "Threshold adjusted p-value for the first dataset:",
+                                                value = 0.05,
+                                                step = 0.01),
+                                   numericInput("padj2",
+                                                label = "Threshold adjusted p-value for the second dataset:",
+                                                value = 0.05,
+                                                step = 0.01),
+                                   helpText("Adjusted p-value should be a numeric between 0 and 1."),
+                                   
+                                   checkboxGroupInput("eventType",
+                                                      label = "Choose the type of splicing events:",
+                                                      choices = listTypeEvents(dataset2Input()),
+                                                      selected = listTypeEvents(dataset2Input())),
+                                   actionButton("selectAllType","Deselect All"),
+                                   
+                                   br(),
+                                   
+                                   h4("Other filters:"),
+                                   
+                                   checkboxInput("splicingFactor", "Select only the genes from the splicing factor list.", FALSE),
+                                   
+                                   checkboxInput("filterC1PSI1", "Apply/Remove filter on mean PSI of first condition (C1) of first dataset", FALSE),
+                                   conditionalPanel("input.filterC1PSI1",
+                                                    sliderInput("C1PSI1",
+                                                                label = "Threshold minimum mean PSI value of first condition (C1) for the first dataset:",
+                                                                min = 0,
+                                                                max = 100,
+                                                                value = 10)
+                                   ),
+                                   checkboxInput("filterC2PSI1", "Apply/Remove filter on mean PSI of second condition (C2) of first dataset", FALSE),
+                                   conditionalPanel("input.filterC2PSI1",
+                                                    sliderInput("C2PSI1",
+                                                                label = "Threshold minimum mean PSI value of second condition (C2) for the first dataset:",
+                                                                min = 0,
+                                                                max = 100,
+                                                                value = 10)
+                                   ),
+                                   checkboxInput("filterC1PSI2", "Apply/Remove filter on mean PSI of first condition (C1) of second dataset", FALSE),
+                                   conditionalPanel("input.filterC1PSI2",
+                                                    sliderInput("C1PSI2",
+                                                                label = "Threshold minimum mean PSI value of first condition (C1) for the second dataset:",
+                                                                min = 0,
+                                                                max = 100,
+                                                                value = 10)
+                                   ),
+                                   checkboxInput("filterC2PSI2", "Apply/Remove filter on mean PSI of second condition (C2) of second dataset", FALSE),
+                                   conditionalPanel("input.filterC2PSI2",
+                                                    sliderInput("C2PSI2",
+                                                                label = "Threshold minimum mean PSI value of second condition (C2) for the second dataset:",
+                                                                min = 0,
+                                                                max = 100,
+                                                                value = 10)
+                                   ),
+                                   
+                                   tags$b("Filters on expression data"),
+                                   
+                                   checkboxInput("filterbaseMean1", "Apply/Remove filter on baseMean value (first dataset)", FALSE),
+                                   conditionalPanel("input.filterbaseMean1",
+                                                    sliderInput("baseMean1",
+                                                                label = "Threshold minimum baseMean value for the first dataset:",
+                                                                min = 0,
+                                                                max = 500,
+                                                                value = 10)
+                                   ),
+                                   checkboxInput("filterbaseMean2", "Apply/Remove filter on baseMean value (second dataset)", FALSE),
+                                   conditionalPanel("input.filterbaseMean2",
+                                                    sliderInput("baseMean2",
+                                                                label = "Threshold minimum baseMean value for the second dataset:",
+                                                                min = 0,
+                                                                max = 500,
+                                                                value = 10)
+                                   ),
+                                   checkboxInput("filterC1fpkm1", "Apply/Remove filter on FPKM of first condition (C1) of first dataset", FALSE),
+                                   conditionalPanel("input.filterC1fpkm1",
+                                                    sliderInput("C1fpkm1",
+                                                                label = "Threshold minimum FPKM value of first condition (C1) for the first dataset:",
+                                                                min = 0,
+                                                                max = 100,
+                                                                value = 1)
+                                   ),
+                                   checkboxInput("filterC2fpkm1", "Apply/Remove filter on FPKM of second condition (C2) of first dataset", FALSE),
+                                   conditionalPanel("input.filterC2fpkm1",
+                                                    sliderInput("C2fpkm1",
+                                                                label = "Threshold minimum FPKM value of second condition (C2) for the first dataset:",
+                                                                min = 0,
+                                                                max = 100,
+                                                                value = 1)
+                                   ),
+                                   checkboxInput("filterC1fpkm2", "Apply/Remove filter on FPKM of first condition (C1) of second dataset", FALSE),
+                                   conditionalPanel("input.filterC1fpkm2",
+                                                    sliderInput("C1fpkm2",
+                                                                label = "Threshold minimum FPKM value of first condition (C1) for the second dataset:",
+                                                                min = 0,
+                                                                max = 100,
+                                                                value = 1)
+                                   ),
+                                   checkboxInput("filterC2fpkm2", "Apply/Remove filter on FPKM of second condition (C2) of second dataset", FALSE),
+                                   conditionalPanel("input.filterC2fpkm2",
+                                                    sliderInput("C2fpkm2",
+                                                                label = "Threshold minimum FPKM value of second condition (C2) for the second dataset:",
+                                                                min = 0,
+                                                                max = 100,
+                                                                value = 1)
+                                   ),
+                                   checkboxInput("filterORfpkm1", "Apply/Remove filter on FPKM of first (C1) or second (C2) condition of first dataset", FALSE),
+                                   conditionalPanel("input.filterORfpkm1",
+                                                    sliderInput("ORfpkm1",
+                                                                label = "Threshold minimum FPKM value of first (C1) or second (C2) condition:",
+                                                                min = 0,
+                                                                max = 100,
+                                                                value = 1)
+                                   ),
+                                   checkboxInput("filterORfpkm2", "Apply/Remove filter on FPKM of first (C1) or second (C2) condition of second dataset", FALSE),
+                                   conditionalPanel("input.filterORfpkm2",
+                                                    sliderInput("ORfpkm2",
+                                                                label = "Threshold minimum FPKM value of first (C1) or second (C2) condition:",
+                                                                min = 0,
+                                                                max = 100,
+                                                                value = 1)
+                                   ),
+                                   checkboxInput("filterC1LocalExpr1", "Apply/Remove filter on event expression of first condition (C1) of first dataset", FALSE),
+                                   conditionalPanel("input.filterC1LocalExpr1",
+                                                    sliderInput("C1LocalExpr1",
+                                                                label = "Threshold minimum event expression value of first condition (C1) for the first dataset:",
+                                                                min = 0,
+                                                                max = 2,
+                                                                value = 0.5,
+                                                                step = 0.1)
+                                   ),
+                                   checkboxInput("filterC2LocalExpr1", "Apply/Remove filter on event expression of second condition (C2) of first dataset", FALSE),
+                                   conditionalPanel("input.filterC2LocalExpr1",
+                                                    sliderInput("C2LocalExpr1",
+                                                                label = "Threshold minimum event expression value of second condition (C2) for the first dataset:",
+                                                                min = 0,
+                                                                max = 2,
+                                                                value = 0.5,
+                                                                step = 0.1)
+                                   ),
+                                   checkboxInput("filterC1LocalExpr2", "Apply/Remove filter on event expression of first (C1) condition of second dataset", FALSE),
+                                   conditionalPanel("input.filterC1LocalExpr2",
+                                                    sliderInput("C1LocalExpr2",
+                                                                label = "Threshold minimum event expression value of first condition (C1) for the second dataset:",
+                                                                min = 0,
+                                                                max = 2,
+                                                                value = 0.5,
+                                                                step = 0.1)
+                                   ),
+                                   checkboxInput("filterC2LocalExpr2", "Apply/Remove filter on event expression of second condition (C2) of second dataset", FALSE),
+                                   conditionalPanel("input.filterC2LocalExpr2",
+                                                    sliderInput("C2LocalExpr2",
+                                                                label = "Threshold minimum event expression value of second condition (C2) for the second dataset:",
+                                                                min = 0,
+                                                                max = 2,
+                                                                value = 0.5,
+                                                                step = 0.1)
+                                   ),
+                                   checkboxInput("filterORLocalExpr1", "Apply/Remove filter on event expression of first (C1) or second (C2) condition of first dataset", FALSE),
+                                   conditionalPanel("input.filterORLocalExpr1",
+                                                    sliderInput("ORLocalExpr1",
+                                                                label = "Threshold minimum event expression value of first (C1) or second (C2) condition:",
+                                                                min = 0,
+                                                                max = 2,
+                                                                value = 0.5,
+                                                                step = 0.1)
+                                   ),
+                                   checkboxInput("filterORLocalExpr2", "Apply/Remove filter on event expression of first (C1) or second (C2) condition of second dataset", FALSE),
+                                   conditionalPanel("input.filterORLocalExpr2",
+                                                    sliderInput("ORLocalExpr2",
+                                                                label = "Threshold minimum event expression value of first (C1) or second (C2) condition:",
+                                                                min = 0,
+                                                                max = 2,
+                                                                value = 0.5,
+                                                                step = 0.1)
+                                   ),
+                                   checkboxInput("filterl2fc1", "Apply/Remove filter on log2 fold change value (first dataset)", FALSE),
+                                   conditionalPanel("input.filterl2fc1",
+                                                    sliderInput("l2fc1",
+                                                                label = "Range absolute log2 fold change value for the first dataset:",
+                                                                min = 0,
+                                                                max = 1000,#ceiling(max(abs(dataset2Input()[,'log2FoldChange.1']), na.rm=TRUE)),
+                                                                value = c(1,3),
+                                                                step = 0.1)
+                                   ),
+                                   checkboxInput("filterl2fc2", "Apply/Remove filter on log2 fold change value (second dataset)", FALSE),
+                                   conditionalPanel("input.filterl2fc2",
+                                                    sliderInput("l2fc2",
+                                                                label = "Range absolute log2 fold change value for the second dataset:",
+                                                                min = 0,
+                                                                max = 1000,#ceiling(max(abs(dataset2Input()[,'log2FoldChange.2']), na.rm=TRUE)),
+                                                                value = c(1,3),
+                                                                step = 0.1)
+                                   ),
+                                   checkboxInput("filterpadjDESeq1", "Apply/Remove filter on DESeq2 adjusted p-value (first dataset)", FALSE),
+                                   conditionalPanel("input.filterpadjDESeq1",
+                                                    numericInput("padjDESeq1",
+                                                                 label = "Threshold minimum adjusted p-value for the first dataset:",
+                                                                 value = 0.05,
+                                                                 step = 0.01),
+                                                    helpText("Adjusted p-value should be a numeric between 0 and 1.")
+                                   ),
+                                   checkboxInput("filterpadjDESeq2", "Apply/Remove filter on DESeq2 adjusted p-value (second dataset)", FALSE),
+                                   conditionalPanel("input.filterpadjDESeq2",
+                                                    numericInput("padjDESeq2",
+                                                                 label = "Threshold minimum adjusted p-value for the second dataset:",
+                                                                 value = 0.05,
+                                                                 step = 0.01),
+                                                    helpText("Adjusted p-value should be a numeric between 0 and 1.")
+                                   ),
+                                   
+                                   tags$b("Filters on VirHostNet data"),
+                                   
+                                   checkboxInput("filterVDegree", "Apply/Remove filter on number of viral partner", FALSE),
+                                   conditionalPanel("input.filterVDegree",
+                                                    sliderInput("vDegree",
+                                                                label = "Minimum number of viral partner:",
+                                                                min = 0,
+                                                                max = 70,
+                                                                value = 1,
+                                                                step = 1)
+                                   ),
+                                   checkboxInput("filterHDegree", "Apply/Remove filter on number of human partner", FALSE),
+                                   conditionalPanel("input.filterHDegree",
+                                                    sliderInput("hDegree",
+                                                                label = "Minimum number of human partner:",
+                                                                min = 0,
+                                                                max = 100,
+                                                                value = 1,
+                                                                step = 1)
+                                   )
+                      ),
+                      
+                      mainPanel(width = 9,
+                                tabsetPanel(id = "tabAS",
+                                            tabPanel('Dataset',
+                                                     withSpinner(
+                                                     tablePanelUI('showDataset2',
+                                                                  choices = reactive({getColumnName(dataset2Input(),
+                                                                                                    toRemove = c("EnsemblID", "lfcSE.1", "stat.1", "pvalue.1",
+                                                                                                                 "lfcSE.2", "stat.2", "pvalue.2"))
+                                                                            }),
+                                                                  selected = c("Gene_Name", "Strand", "Event_type", 
+                                                                               "Variable_part_length", "adjusted_pvalue.1",
+                                                                               "dPSI.1","adjusted_pvalue.2", "dPSI.2")
+                                                     ))
+                                            ),
+                                            
+                                            tabPanel('Plot',
+                                                     withSpinner(
+                                                     plotPanelUI('plotDataset2',
+                                                                 xchoices = c("Event_type", "Variable_part_length", 
+                                                                              "adjusted_pvalue.1", "dPSI.1",
+                                                                              "adjusted_pvalue.2", "dPSI.2",
+                                                                              "baseMean.1", "log2FoldChange.1",
+                                                                              "baseMean.2", "log2FoldChange.2",
+                                                                              "C1_local_expression.1", "C2_local_expression.1",
+                                                                              "C1_local_expression.2", "C2_local_expression.2",
+                                                                              "C1_fpkm.1", "C2_fpkm.1",
+                                                                              "C1_fpkm.2", "C2_fpkm.2",
+                                                                              "C1_PSI_mean.1", "C2_PSI_mean.1",
+                                                                              "C1_PSI_mean.2", "C2_PSI_mean.2"),
+                                                                 xselected = "dPSI.2",
+                                                                 ychoices = c("Event_type", "Variable_part_length",
+                                                                              "adjusted_pvalue.1", "dPSI.1",
+                                                                              "adjusted_pvalue.2", "dPSI.2",
+                                                                              "baseMean.1", "log2FoldChange.1",
+                                                                              "baseMean.2", "log2FoldChange.2",
+                                                                              "C1_local_expression.1", "C2_local_expression.1",
+                                                                              "C1_local_expression.2", "C2_local_expression.2",
+                                                                              "C1_fpkm.1", "C2_fpkm.1",
+                                                                              "C1_fpkm.2", "C2_fpkm.2",
+                                                                              "C1_PSI_mean.1", "C2_PSI_mean.1",
+                                                                              "C1_PSI_mean.2", "C2_PSI_mean.2"),
+                                                                 yselected = "dPSI.1",
+                                                                 colorChoices = c("Variable_part_length", 
+                                                                                  "adjusted_pvalue.1", "dPSI.1", "adjusted_pvalue.2", "dPSI.2",
+                                                                                  "baseMean.1", "log2FoldChange.1", "baseMean.2", "log2FoldChange.2",
+                                                                                  "C1_local_expression.1", "C2_local_expression.1", "C1_local_expression.2", "C2_local_expression.2",
+                                                                                  "C1_fpkm.1", "C2_fpkm.1", "C1_fpkm.2", "C2_fpkm.2",
+                                                                                  "C1_PSI_mean.1", "C2_PSI_mean.1", "C1_PSI_mean.2", "C2_PSI_mean.2"),
+                                                                 colorSelectedVar = "Variable_part_length",
+                                                                 colorSelectedCond = "=",
+                                                                 colorSelectedVal = 0
+                                                     ))
+                                            )
+                                )
+                      )
+        )
+    )
+}
