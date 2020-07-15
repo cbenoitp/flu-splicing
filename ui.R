@@ -8,20 +8,37 @@ tagList(
                    fluidRow(
                        column(width=8, offset = 2,
                               div(h1("Welcome to the FluHit data exploration Shiny web interface"), br(),
-                                  div(style= "text-align:justify", p("ABSTRACT"),
-                                      p("This Shiny Interface allow to explore the results presented in XXX (2020) paper. Complete results of the different transcriptomic analysis are available: mutltivariate analysis (PCA), alternative splicing analysis with KisSplice, differential expression with DESeq2 and readthrough analysis.")),
+                                  div(style= "text-align:justify",
+                                      p("Influenza A viruses (IAV) use diverse mechanisms to interfere with cellular gene expression and thus limit the 
+                                        antiviral responses and/or promote viral replication. Although many RNAseq studies have documented IAV-induced 
+                                        changes in host mRNA abundance, few were designed to allow an accurate quantification of changes in host mRNA splicing. 
+                                        Here we show that IAV infection of human lung cells induces widespread alterations of cellular splicing, with an overall 
+                                        increase in exon inclusion and decrease in intron retention. Over half of the mRNAs that show differential splicing 
+                                        undergo no significant changes in abundance or in their 3’ end termination site, suggesting that IAV can directly 
+                                        manipulate cellular splicing independently of other transcriptional changes. Focusing on a subset of IAV-sensitive 
+                                        alternative splicing events, we found that most are conserved across distinct cell lines and viral subtypes, and are 
+                                        specific to IAV infection as they are not observed upon infection with VSV, induction of the interferon response or 
+                                        induction of an osmotic stress. Finally , cross-analysis of the alternative splicing profiles of IAV-infected and 
+                                        RED-depleted cells demonstrates a partial phenocopying of the RED-knock down phenotype in infected cells, 
+                                        suggesting that hijacking of the RED factor by IAVs to promote splicing of their own mRNAs could account for a minor 
+                                        subset of splicing changes in infected cells."),
+                                      p("This Shiny Interface allow to explore the results presented in Ashraf et al (2020). Complete results of the different 
+                                        transcriptomic analysis are available: mutltivariate analysis (PCA), alternative splicing analysis with KisSplice, 
+                                        differential expression with DESeq2 and readthrough analysis.")),
                                   br(), hr(), br(),
                                   align = "center"
                               ),
                               h5(strong("Description of the data")),
                               p("The dataset is comprised of 6 conditions (2 infection conditions x 3 transfection conditions) with 4 biological replicates each (total of 24 samples)."),
-                              p("FIGURE"),
+                              div(img(src = "FluHit_Design.png", height = 500), align = "center"),
                               br(), hr(), br(),
                               h5(strong("Author")),
                               p("Clara Benoit-Pilven - clara.benoit-pilven@helsinki.fi - Institute for Molecular Medicine – Helsinki - Finland"),
                               br(),
                               h5(strong("Citation")),
-                              p("Manuscript in preparation"),
+                              p("Ashraf U*, Benoit-Pilven C*, Navratil V, Fournier G, Munier S, Sismeiro O, Coppée JY,  Lacroix V, Naffakh N, (2020)
+                                Influenza virus infection induces widespread alterations of host cell splicing. (manuscript in preparation)"),
+                              p("* co-first authors"),
                               br(), hr(), br()
                        ),
                        column(width=12,

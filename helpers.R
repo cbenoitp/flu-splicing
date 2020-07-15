@@ -213,7 +213,7 @@ descriptionASData <- function(ASdatasetName){
                                    C2 = C_mock"),
         "R virus VS mock" = paste0("AS analysis with KisSplice (stranded).<br/>
                                    Comparison of the infected samples (virus) versus the non-infected samples (mock)
-                                   treated with siRNA RED-SMU1 (R).<br/>
+                                   treated with siRNA RED (R).<br/>
                                    A total of ", nbrEvents, " events were analyzed by kissDE.<br/>
                                    C1 = R_virus<br/>
                                    C2 = R_mock"),
@@ -225,18 +225,18 @@ descriptionASData <- function(ASdatasetName){
                                    C2 = U_mock & C_mock"),
         "UCR virus VS mock" = paste0("AS analysis with KisSplice (stranded).<br/>
                                    Comparison of the infected samples (virus) versus the non-infected samples (mock)
-                                   in all conditions (untreated, treated with siRNA Control and treated with siRNA RED-SMU1).<br/>
+                                   in all conditions (untreated, treated with siRNA Control and treated with siRNA RED).<br/>
                                    A total of ", nbrEvents, " events were analyzed by kissDE.<br/>
                                    C1 = U_virus, C_virus & R_virus<br/>
                                    C2 = U_mock, C_mock & R_mock"),
         "mock R VS C" = paste0("AS analysis with KisSplice (stranded).<br/>
-                                   Comparison of the samples treated with siRNA RED-SMU1 (R) versus the samples treated
+                                   Comparison of the samples treated with siRNA RED (R) versus the samples treated
                                    with siRNA Control (C) in the non-infected condition (mock).<br/>
                                    A total of ", nbrEvents, " events were analyzed by kissDE.<br/>
                                    C1 = R_mock<br/>
                                    C2 = C_mock"),
         "virus R VS C" = paste0("AS analysis with KisSplice (stranded).<br/>
-                                   Comparison of the samples treated with siRNA RED-SMU1 (R) versus the samples treated
+                                   Comparison of the samples treated with siRNA RED (R) versus the samples treated
                                    with siRNA Control (C) in the infected condition (virus).<br/>
                                    A total of ", nbrEvents, " events were analyzed by kissDE.<br/>
                                    C1 = R_virus<br/>
@@ -260,7 +260,7 @@ descriptionExprData <- function(ExprdatasetName){
                                     C2 = C_mock"),
         "R virus VS mock" = paste0("Expression analysis with DESeq2.<br/>
                                     Comparison of the infected samples (virus) versus the non-infected samples (mock)
-                                    treated with siRNA RED-SMU1 (R).<br/>
+                                    treated with siRNA RED (R).<br/>
                                     C1 = R_virus<br/>
                                     C2 = R_mock"),
         "UC virus VS mock" = paste0("Expression analysis with DESeq2.<br/>
@@ -270,16 +270,16 @@ descriptionExprData <- function(ExprdatasetName){
                                     C2 = U_mock & C_virus"),
         "UCR virus VS mock" = paste0("Expression analysis with DESeq2.<br/>
                                      Comparison of the infected samples (virus) versus the non-infected samples (mock)
-                                     in all conditions (untreated, treated with siRNA Control and treated with siRNA RED-SMU1).<br/>
+                                     in all conditions (untreated, treated with siRNA Control and treated with siRNA RED).<br/>
                                      C1 = U_virus, C_virus & R_virus<br/>
                                      C2 = U_mock, C_mock & R_mock"),
         "mock R VS C" = paste0("Expression analysis with DESeq2.<br/>
-                               Comparison of the samples treated with siRNA RED-SMU1 (R) versus the samples treated
+                               Comparison of the samples treated with siRNA RED (R) versus the samples treated
                                with siRNA Control (C) in the non-infected condition (mock).<br/>
                                C1 = R_mock<br/>
                                C2 = C_mock"),
         "virus R VS C" = paste0("Expression analysis with DESeq2.<br/>
-                               Comparison of the samples treated with siRNA RED-SMU1 (R) versus the samples treated
+                               Comparison of the samples treated with siRNA RED (R) versus the samples treated
                                with siRNA Control (C) in the infected condition (virus).<br/>
                                C1 = R_virus<br/>
                                C2 = C_virus")

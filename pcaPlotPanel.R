@@ -58,11 +58,11 @@ pcaPlotPanel<- function(input, output, session, typeData, dataInput){
         pcaVar <- dataPCA$pcaVar
         # prepare the color vector
         colorsLab <- c("Untreated_mock" = "#70a9c8", "Untreated_virus" = "#1171a4", "siControl_mock" = "#82c082", 
-                       "siControl_virus" = "#78b4a8",  "siRED-SMU1_mock" = "#2f972f", "siRED-SMU1_virus" = "#1f826f")
+                       "siControl_virus" = "#78b4a8",  "siRED_mock" = "#2f972f", "siRED_virus" = "#1f826f")
         colorsLab <- colorsLab[which(names(colorsLab) %in% dataPCAToPlot$condition)]
         # prepare the shape vector
         pchsLab <- c("Untreated_mock" = 2, "Untreated_virus" = 1, "siControl_mock" = 5, 
-                     "siControl_virus" = 8,  "siRED-SMU1_mock" = 0, "siRED-SMU1_virus" = 4)
+                     "siControl_virus" = 8,  "siRED_mock" = 0, "siRED_virus" = 4)
         pchsLab <- pchsLab[which(names(pchsLab) %in% dataPCAToPlot$condition)]
         # do the plot
         p <- ggplot(data = dataPCAToPlot, 
