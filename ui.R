@@ -46,6 +46,7 @@ tagList(
                                   img(src = "Lyon1.jpg", height = 70, hspace = 5), 
                                   img(src = "INRIA.jpg", height = 65, hspace = 5), 
                                   img(src = "CNRS.jpg", height = 65, hspace = 5), 
+                                  img(src = "PRABI.png", height = 70, hspace = 5),
                                   img(src = "Pasteur.png", height = 70, hspace = 5),
                                   align = "center"
                               )
