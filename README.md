@@ -1,6 +1,6 @@
 # Shiny FluHit
 
-These scripts allow to launch a local version of the Shiny web-interface to explore the RNA-seq data from XXX (2020).
+These scripts allow to launch a local version of the Shiny web-interface to explore the RNA-seq data from [Ashraf et al. (2020)](https://academic.oup.com/nargab/article/2/4/lqaa095/5998301).
 
 
 ## Prerequisites
