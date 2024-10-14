@@ -15,6 +15,9 @@ R and the following R packages should be installed:
 * dplyr
 * colourpicker
 
+Before cloning the github repository, install `git-lfs` in order to get the complete RData (check [github git-lfs installation guide](https://docs.github.com/en/repositories/working-with-files/managing-large-files/installing-git-large-file-storage) for more details).
+In case the RData are very small after cloning instead of the size showed in GitHub, please execute the command `git-lfs pull .` in the cloned directory.
+
 
 ## Launch the Shiny App
 
